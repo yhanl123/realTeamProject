@@ -15,7 +15,8 @@
 	</insert>
 	
 	<select id="getReviewList" resultType="map">
-		SELECT reviewNum, reviewAuthor, reviewContents, reviewDate, reviewParentsNum, reviewLikeCnt, reviewStar, 
+		SELECT reviewNum, reviewAuthor, reviewContents, reviewDate, reviewParentsNum, reviewLikeCnt, reviewStar,
+			 i.itemNum as itemNum, i.goods as goods,
 				GROUP_CONCAT(reviewAttachNum) AS reviewAttachNums,
 				GROUP_CONCAT(reviewAttachName) AS reviewAttachNames,
 				GROUP_CONCAT(reviewAttachParentsNum) AS reviewAttachParentsNums,
@@ -23,11 +24,12 @@
 				GROUP_CONCAT(reviewAttachFileContentType) AS reviewContentTypes
 			FROM review r LEFT OUTER JOIN reviewAttach a
 			ON r.reviewNum=a.reviewAttachParentsNum
+			LEFT OUTER JOIN item i ON r.reviewParentsNum = i.itemNum
 			GROUP BY r.reviewNum
 			ORDER BY r.reviewNum DESC
 	</select>
 	
-	<select id="reviewList" resultType="map">
+	<select id="getReviewListByItemNum" resultType="map">
 			SELECT reviewNum, reviewAuthor, reviewContents, reviewDate, reviewParentsNum, reviewLikeCnt, reviewStar, 
 				GROUP_CONCAT(reviewAttachNum) AS reviewAttachNums,
 				GROUP_CONCAT(reviewAttachName) AS reviewAttachNames,

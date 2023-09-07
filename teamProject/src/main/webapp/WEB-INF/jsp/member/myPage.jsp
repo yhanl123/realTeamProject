@@ -116,7 +116,7 @@
 	            COUPON
 	        </td>
 	        <td rowspan="3" id="cpcdata">
-	            0개 <br/>
+	            ${sessionScope.cartCount}개 <br/>
 	            <c:set var="point" value="${member.point}"/>
 	            <fmt:formatNumber value="${point}" type="number"/>
 	            원 <br/>

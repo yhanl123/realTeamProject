@@ -13,6 +13,8 @@ public interface ItemMapper {
 	public int addAndGetKey(Item item);
 
 	public int addAttach(List<ItemAttach> attList);
+	
+	public int addOption(List<ItemOption> optList);
 
 	public List<Map<String,String>> getItem(int itemNum); //아이템 가져오기 
 

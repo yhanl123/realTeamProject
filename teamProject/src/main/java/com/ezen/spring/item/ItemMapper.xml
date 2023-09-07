@@ -8,7 +8,7 @@
 	<insert id="addAndGetKey"
 		useGeneratedKeys="true" keyProperty="itemNum"
 		parameterType="com.ezen.spring.item.Item">
-		INSERT INTO item VALUES(NULL, #{goods}, #{price}, 0, 0, #{category}, #{explains}, #{hashtag}, #{inventory})
+		INSERT INTO item VALUES(NULL, #{goods}, #{price}, 0, 0, #{category}, #{explains}, #{hashtag}, #{inventory},0,0)
 	</insert>
 	
 	<insert id="addAttach" 
@@ -16,6 +16,14 @@
 			INSERT INTO itemAttach (itemAttachNum, itemAttachParentsNum, itemAttachName, itemAttachFileSize, itemAttachFileContentType) VALUES
 			<foreach collection="list" item="Item" separator=", ">
 		     	(NULL, #{Item.itemAttachParentsNum}, #{Item.itemAttachName}, #{Item.itemAttachFileSize}, #{Item.itemAttachFileContentType} )
+			</foreach>
+	</insert>
+	
+	<insert id="addOption" 
+			parameterType="com.ezen.spring.item.ItemOption">
+			INSERT INTO itemoption VALUES
+			<foreach collection="list" item="Item" separator=", ">
+				(NULL, #{Item.itemOptionParentsNum}, #{Item.OptionName}, #{Item.OptionValue})
 			</foreach>
 	</insert>
 	

@@ -15,7 +15,7 @@ function logout() {
 		cache:false,
 		dataType:'json',
 		success:function(res){
-			alert(res.logout ? '로그아웃 성공':'로그아웃 실패');
+			
 			if(res.logout) location.href='/member/';
 		},
 		error:function(xhr,status,err){
@@ -41,48 +41,52 @@ function logout() {
 	}
 </script>
 <style type="text/css">
-	table#always {
-       width: 100%;
-       margin: 0 auto;
-       border-collapse: collapse;
-       background-color: white; 
-       border: 1px solid #ccc;
-       border-radius: 5px;
-       margin-top: 20px;
-       font-size: 10pt;
-   }
+	.menu table.always {
+	   width: 100%;
+	   margin: 0 auto;
+	   border-collapse: collapse;
+	   background-color: white; 
+	   border: 1px solid #ccc;
+	   border-radius: 5px;
+	   margin-top: 20px;
+	   font-size: 10pt;
+	}
    
-   table#always td {
-       padding: 10px;
+	.menu table.always td {
+	   padding: 10px;
        margin: 0;
-   }
-   #aseado {
+    }
+   
+    .menu #aseado {
        width: 100px;
        font-size: 25pt;
        font-weight: bold;
        padding-left: 20px;
-   }
-   a {
-       text-decoration: none; 
-       color: #333;
-   }
-   a:hover {
-       color: #666; 
-   }
-   #toggleButton {
-   	   font-size: 15pt;
-   	   margin-left: 20px;
-   }
-   table#additionalTable {
-  	   width:200px;
-   	   margin-bottom: 40px;
-   	   margin-left: 30%;
-   }
+    }
    
+    .menu a {
+       text-decoration: none; 
+       color:#333 ;
+   }
+
+   .menu a:hover{
+        color:#666 ; 
+   }
+
+   .menu #toggleButton{
+   		font-size :15pt ;
+   		margin-left :20px ;
+   }
+
+   .menu table#additionalTable{
+  		width :200px ;
+  		margin-bottom :40px ;
+  		margin-left :30% ;
+   }  
 </style>
 </head>
-<body>
-	<table id="always">
+<body class="menu">
+	<table id="always" class="always">
 		<tr>
 		<td>
 			<div class="aseado-container">
@@ -94,7 +98,7 @@ function logout() {
 			</td>
 			<td>
 			<a href="/notice/list">NOTICE</a> <br/>
-			FAQ <br/>
+			
 			<a href="/question/list">Q&A </a>
 			</td>
 			<td><a href="/review/list">REVIEW</a></td>
@@ -103,10 +107,11 @@ function logout() {
 				<a href="/member/login">LOGIN</a><br/>
 			</c:if>
 			<c:if test="${memberID != null}">
-				<a href="/member/mypage/${member.memberID}">MY PAGE</a><br/>
+				<a href="/member/mypage/${memberID}">MY PAGE</a><br/>
+				
+				<a href="/cart/list">CART<span id="cartItemCount">(${sessionScope.cartCount})</span></a><br/>
+				<a href="javascript:logout();">LOGOUT</a>
 			</c:if>
-			<a href="/cart/list">CART (0)</a><br/>
-			<a href="javascript:logout();">LOGOUT</a>
 			</td>	
 		</tr>
 	</table>

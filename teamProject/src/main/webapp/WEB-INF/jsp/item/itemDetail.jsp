@@ -47,7 +47,12 @@
 		border: 1px solid #ccc;
 		border-radius: 5px;
 	}
-
+	#aa{
+	 max-width: 400px; /* 원하는 최대 너비 */
+	    max-height: 400px; /* 원하는 최대 높이 */
+	    width: 400;
+	    height: 400;
+	}
 	#buttons {
 		text-align: center;
 		margin-top: 20px;
@@ -67,8 +72,31 @@
 		background-color: #444;
 	}
 </style>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	function delItem(itemNum) {
+    function addCart(memberID) {
+    	var formdata = $('#addCartForm').serialize();
+    	$.ajax({
+    		url:'/cart/addCart',
+    		data:formdata,
+    		method:'post',
+    		cache:false,
+    		dataType:'json',
+    		success:function(res) {
+ 	            if(res.added) {
+ 	            	$('#cartItemCount').text(res.cartCount);
+ 	            	if(!confirm("장바구니에 담았습니다 .장바구니로 이동하시겠습니까?")) return;
+ 	            	location.href = '/cart/list';
+ 	            }
+    		},
+	        error: function (xhr, status, err) {
+	            alert(status + "/" + err);
+	        }
+	    });
+	    return false;
+    }
+    
+    function delItem(itemNum) {
 		if(!confirm('현재 아이템을 삭제하시겠습니까?')) return;
 		$.ajax({
 			url:'/item/delete/'+ itemNum,
@@ -84,30 +112,7 @@
 			}
 		});
 	}
-	return;
-</script>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    function addCart() {
-    	var formdata = $('#addCartForm').serialize();
-    	$.ajax({
-    		url:'/cart/addCart',
-    		data:formdata,
-    		method:'post',
-    		cache:false,
-    		dataType:'json',
-    		success:function(res) {
- 	            if(res.added) {
- 	            	if(!confirm("장바구니로 이동할까요?")) return;
- 	            	location.href = '/cart/list';
- 	            }
-    		},
-	        error: function (xhr, status, err) {
-	            alert(status + "/" + err);
-	        }
-	    });
-	    return false;
-    }
+
 </script>
 
 </head>
@@ -140,9 +145,11 @@
 			<th>재고수량</th>
 			<td>${item.inventory}</td>
 		</tr>
+		
 		<tr>
 			<td colspan="4" style="text-align: center;">
 				<button type="submit">장바구니에 담기</button>
+				<button type="button" onclick="javascript:add_Order();">결제</button>
 			</td>
 		</tr>
 		<tr>
@@ -158,8 +165,30 @@
 		</c:if>
 	</nav>
 	
-	===============
-	리뷰 관련 칸 
+	===============REVIEW=================
+	</p>
+	
+	<c:forEach var="r" items="${reviewList}">
+		<!-- 기존에 출력된 review 중복 출력 방지 -->
+		<c:set var="reviewNum" value="${0}"></c:set>
+		<c:if test="${r.reviewNum!=reviewNum}">
+			<tr><td colspan="2">
+				<a href="/review/get/${r.reviewNum}">
+					<img id=aa src="${pageContext.request.contextPath}/reviewPhoto/${fn:split(r.reviewAttachNames, ',')[0]}">
+				</a>
+			</td></tr>
+			<tr><td colspan="2">
+			Comment :	<a href="/review/get/${r.reviewNum}">${r.reviewContents}</a>
+			</td></tr>
+			<tr>
+				<th>구매자 : </th><td>${r.reviewAuthor}</td> 
+			</tr>
+			<tr>
+				<th>좋아요❤️ :  </th><td>${r.reviewLikeCnt}</td>
+			</tr>	
+		</c:if>
+		<c:set var="reviewNum" value="${r.reviewNum}"/>
+	</c:forEach>
 </main>
 </body>
 </html>

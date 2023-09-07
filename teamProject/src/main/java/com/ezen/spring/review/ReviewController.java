@@ -110,7 +110,7 @@ public class ReviewController
 	}
 	
 	@GetMapping("/list")  //전체 리뷰 리스트
-	public String reviewList(Model model)
+	public String reviewList(Model model,@SessionAttribute(value="memberID", required=false) String uid)
 	{
 		List<Map<String, String>> reviewList = reviewDAO.getReviewList();
 		model.addAttribute("reviewList", reviewList);

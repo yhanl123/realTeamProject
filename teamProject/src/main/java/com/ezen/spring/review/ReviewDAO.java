@@ -36,6 +36,11 @@ public class ReviewDAO
 		return reviewMapper.getReviewList();
 	}
 	
+	public List<Map<String, String>> getReviewListByItemNum(int itemNum) 
+	{
+		return reviewMapper.getReviewListByItemNum(itemNum);
+	}
+	
 	public List<Map<String, String>> detailReview(int reviewNum)
 	{
 		return reviewMapper.getReview(reviewNum);

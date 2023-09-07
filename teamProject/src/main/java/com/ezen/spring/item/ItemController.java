@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ezen.spring.item.ItemAttach;
 import com.ezen.spring.member.Member;
 import com.ezen.spring.member.MemberDAO;
+import com.ezen.spring.review.ReviewDAO;
 import com.github.pagehelper.PageInfo;
 
 import jakarta.servlet.ServletContext;
@@ -46,6 +47,9 @@ public class ItemController {
 	
 	@Autowired
 	private ItemSvc itemSvc;
+	
+	@Autowired
+	private ReviewDAO reviewDAO;
 	
 	@GetMapping("/") //test
 	@ResponseBody
@@ -115,6 +119,9 @@ public class ItemController {
 		model.addAttribute("item", item); 
 		Member member = memberDAO.getMember(memberID);
 		model.addAttribute("member",member);
+		
+		List<Map<String, String>> reviewList = reviewDAO.getReviewListByItemNum(itemNum);
+		model.addAttribute("reviewList", reviewList);
 		return "item/itemDetail";
 	}
 	

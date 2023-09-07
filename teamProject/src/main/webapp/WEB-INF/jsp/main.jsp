@@ -79,13 +79,14 @@
 			flex-basis: 100%;
 		}
 	}
+	h2{ text-align:center;}
 </style>
 </head>
 <body>
 <%@ include file="menu.jsp" %>
 
 <div id="container">
-	<h2>🔥 Best Top 10</h2>
+	<h2> Best Top 10</h2>
 	<div class="product-container">
 	   <c:forEach var="item" items="${topItems}">
 	      <div class="product">
@@ -102,7 +103,7 @@
 	   </c:forEach>
 	</div>
 	
-	<h2>🔥 Best Review Top 3</h2>
+	<h2> Best Review Top 3</h2>
 	<div class="product-container">
 	   <c:forEach var="review" items="${topReviews}">
 	      <div class="product">
@@ -113,7 +114,7 @@
 	         	<a href="/review/get/${review.reviewNum}">${review.reviewContents}</a>
 	         </div>
 	         <div id="reviewLikeCnt">
-	         	👍🏻 ${review.reviewLikeCnt}
+	         	❤️ ${review.reviewLikeCnt}
 	         </div>
 	      </div>
 	   </c:forEach>

@@ -31,4 +31,5 @@ public class Item {
 	private int inventory; //재고 수량 
 	
 	private List<ItemAttach> attList;
+	private List<ItemOption> optList;
 }

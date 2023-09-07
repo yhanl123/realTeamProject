@@ -15,6 +15,8 @@ public interface ReviewMapper
 	
 	public List<Map<String, String>> getReviewList();
 	
+	public List<Map<String, String>> getReviewListByItemNum(int itemNum);
+	
 	public List<Map<String, String>> getReview(int reviewNum);
 	
 	public int removeAttach(int reviewAttachNum);

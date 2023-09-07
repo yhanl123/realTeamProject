@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.ezen.spring.cart.CartDAO;
 import com.ezen.spring.item.ItemSvc;
 import com.ezen.spring.review.ReviewSvc;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -34,6 +36,9 @@ public class MemberController {
 	private MemberDAO memberDAO;
 	
 	@Autowired
+	private CartDAO cartDAO;
+	
+	@Autowired
 	@Qualifier("itemSvc")
 	private ItemSvc itemSvc;
 	
@@ -42,9 +47,11 @@ public class MemberController {
 	private ReviewSvc reviewSvc;
 	
 	@GetMapping("/") //쇼핑몰 main 화면 
-	public String main(Model model, @SessionAttribute(value="memberID", required=false) String memberID)
+	public String main(Model model,@SessionAttribute(value="memberID", required=false) String memberID,HttpSession session)
 	{
 		model.addAttribute("memberID",memberID);
+		
+
 		// best Item top10 메인 화면에 띄우기 
 		List<Map<String, String>> topItems = itemSvc.getTopItems(10);
 	    model.addAttribute("topItems", topItems);
@@ -78,13 +85,16 @@ public class MemberController {
 	
 	@PostMapping("/login") //로그인
 	@ResponseBody
-	public Map<String, Object> login(String memberID, String memberPwd, Model model){
+	public Map<String, Object> login(String memberID, String memberPwd, Model model,HttpSession session){
 		boolean login = memberDAO.login(memberID,memberPwd);
 		Map<String, Object> map = new HashMap<>();
 		map.put("login", login);
 		if(login) {
 			model.addAttribute("memberID",memberID);//session에 memberID 저장하는 코드 
 			map.put("memberID", memberID);
+			
+			int cartCount = cartDAO.getCartCount(memberID); // 장바구니 개수 조회
+			session.setAttribute("cartCount", cartCount); // session에 cartCount 저장하는 코드 
 		}
 		return map;
 	}

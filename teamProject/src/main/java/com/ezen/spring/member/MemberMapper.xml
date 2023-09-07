@@ -78,5 +78,7 @@
 			WHERE memberID = #{memberID}
 	</update>
 	
+	
+	
 
 </mapper>

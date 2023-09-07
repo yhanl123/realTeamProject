@@ -9,5 +9,11 @@
 			resultType="Integer">
 			SELECT MAX(orderNum) FROM `order`;
 	</select>
+	
+	<insert id="addOrder"
+			useGeneratedKeys="true" keyProperty="orderNum"
+			parameterType="com.ezen.spring.order.Order">
+			INSERT INTO order VALUES(NULL, #{itemOrderNum}, #{paymentDate}, #{itemNum})
+	</insert>
 
 </mapper>

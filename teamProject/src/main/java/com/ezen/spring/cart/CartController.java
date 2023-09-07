@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -41,7 +42,7 @@ public class CartController {
 	public Map<String, Object> add(@SessionAttribute(name = "memberID", required = false) String memberID,
 	                               @RequestParam int itemNum,
 	                               @RequestParam int price,
-	                               @RequestParam int quantity) {
+	                               @RequestParam int quantity, HttpSession session) {
 		Map<String, Object> map = new HashMap<>();
 		if(memberID==null) {
 			map.put("added", false);
@@ -66,15 +67,17 @@ public class CartController {
 		else {
 			boolean addCart = cartDAO.addCart(cart);
 			map.put("added", addCart);
-			map.put("itemNum", itemNum);
 		}
+	    map.put("itemNum", itemNum);
+	    int cartCount = cartDAO.getCartCount(memberID);
+		session.setAttribute("cartCount", cartCount);
 	    return map;  
 	}
 	
 	@GetMapping("/list")  
-	public String cartList(Model model, @SessionAttribute(name="memberID",required = false) String memberID)
+	public String cartlist(Model model, @SessionAttribute(name="memberID",required = false) String memberID)
 	{
-		List<Cart> list = cartDAO.getList(memberID);
+		List<Map<String, String>> list = cartDAO.getList(memberID);
 		model.addAttribute("list", list);
 		model.addAttribute("memberID", memberID);
 		return "cart/cartList";
@@ -97,10 +100,10 @@ public class CartController {
 	@PostMapping("/delete")  //삭제
 	@ResponseBody
 	public Map<String, Object> delete(@SessionAttribute(name="memberID",required = false) String memberID, 
-									  @RequestBody List<Integer> cartNums)
+									  @RequestBody List<Integer> cartNums,HttpSession session)
 	{
 		Map<String, Object> map = new HashMap<>();
-		List<Cart> cart = cartDAO.getList(memberID);
+		List<Map<String, String>> cart = cartDAO.getList(memberID);
 
 		if(cart==null) {
 			map.put("deleted", false);
@@ -109,22 +112,27 @@ public class CartController {
 				cartDAO.delete(cartNums.get(i));            
 			} 
 			map.put("deleted", true);
+			int cartCount = cartDAO.getCartCount(memberID);
+			session.setAttribute("cartCount", cartCount);
 		}
 		return map;
 	}
 	
 	@GetMapping("/clear")  //카트 전부 비우기
 	@ResponseBody
-	public Map<String,Object> cartClear(@SessionAttribute(name="memberID",required = false) String memberID){
+	public Map<String,Object> cartClear(@SessionAttribute(name="memberID",required = false) String memberID,
+			HttpSession session){
 		Map<String, Object> map = new HashMap<>();
 		
-		List<Cart> cartList = cartDAO.getList(memberID);
+		List<Map<String, String>> cartList = cartDAO.getList(memberID);
 		if(cartList == null || cartList.isEmpty()) {
 			map.put("cleared", false);
-			map.put("msg", "장바구니가 비어있습니다.");
+			map.put("msg", "장바구니에 담긴 상품이 없습니다.");
 		} else {
 			boolean cleared = cartDAO.cartClear(memberID);
 			map.put("cleared", cleared);
+			int cartCount = cartDAO.getCartCount(memberID);
+			session.setAttribute("cartCount", cartCount);
 		}
 		return map;
 	}
