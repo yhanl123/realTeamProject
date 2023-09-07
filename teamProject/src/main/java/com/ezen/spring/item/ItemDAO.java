@@ -26,11 +26,11 @@ public class ItemDAO {
 	{
 		boolean iSaved = itemMapper.addAndGetKey(item)>0;
 		//아이템을 DB에 저장한 후 item.getItemNum을 하면 아이템 번호가 나옴.
-		int itemAttachParentsNum = item.getItemNum();
+		int parentsNum = item.getItemNum();
 		
 		List<ItemAttach> list = item.getAttList();
 		for(int i=0;i<list.size();i++) {
-			list.get(i).setItemAttachParentsNum(itemAttachParentsNum);
+			list.get(i).setItemAttachParentsNum(parentsNum);
 			//그 번호를 ItemAttach의 parentsNum으로 set 해줌.
 		}
 		boolean aSaved = false;
@@ -41,7 +41,20 @@ public class ItemDAO {
 			aSaved = true;
 		}
 		
-		return iSaved && aSaved;
+		// 아이템 옵션을 저장
+		List<ItemOption> optList = item.getOptList();
+		boolean oSaved = true; // 기본적으로 옵션이 없는 경우로 초기화
+
+		if (optList != null && !optList.isEmpty()) { // 옵션 리스트가 비어있지 않으면
+		    for (int i = 0; i < optList.size(); i++) {
+		        ItemOption option = optList.get(i);
+		        option.setItemOptionParentsNum(parentsNum);
+		    }
+
+		    oSaved = itemMapper.addOption(optList) > 0;
+		}
+		
+		return iSaved && aSaved && oSaved;
 	}
 
 	@Transactional
